@@ -1,0 +1,1370 @@
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"   xmlns:local="clr-namespace:MirrorsEdgeTweaks" xmlns:i="https://github.com/projektanker/icons.avalonia"  x:Class="MirrorsEdgeTweaks.MainWindow" Background="{DynamicResource MaterialDesignPaper}" Title="Mirror's Edge Tweaks" Height="800" Width="650" CanResize="False" Icon="/Icon.ico" WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Margin="0,0,0,10">
+            <Button Click="SelectGameDirectory_Click" Padding="10,5" DockPanel.Dock="Right" Classes="outlined">
+                <StackPanel Orientation="Horizontal">
+                    <i:Icon  Margin="0,0,8,0" VerticalAlignment="Center" Value="mdi-folder-search-outline"/>
+                    <TextBlock Text="Select Game Directory"/>
+                </StackPanel>
+            </Button>
+            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" Margin="0,0,10,0" CornerRadius="4">
+                <TextBlock x:Name="GameDirectoryPathTextBlock" Text="No directory selected." VerticalAlignment="Center" Padding="5" TextTrimming="CharacterEllipsis"/>
+            </Border>
+        </DockPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5,0,0,10">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <i:Icon  VerticalAlignment="Center" Margin="0,0,5,0" Opacity="0.7" Value="mdi-tag-outline"/>
+                <TextBlock x:Name="GameVersionTextBlock" Text="Game Version: N/A" Opacity="0.7"/>
+            </StackPanel>
+            <Border Margin="16,0" Classes="separator" Height="16" Width="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <i:Icon  VerticalAlignment="Center" Margin="0,0,5,0" Opacity="0.7" Value="mdi-file-document-outline"/>
+                <TextBlock x:Name="ConfigStatusTextBlock" Text="Documents Configs: N/A" Opacity="0.7"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="5,10,0,30">
+            <Button Click="LaunchGame_Click" Margin="0,0,10,0" Height="28" Padding="8,4" Classes="raised">
+                <StackPanel Orientation="Horizontal">
+                    <i:Icon  VerticalAlignment="Center" Margin="0,0,6,0" Value="mdi-play"/>
+                    <TextBlock Text="Launch Game" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+            <Button Click="LaunchGameWithArgs_Click" Height="28" Padding="8,4" Classes="outlined">
+                <StackPanel Orientation="Horizontal">
+                    <i:Icon  VerticalAlignment="Center" Margin="0,0,6,0" Value="mdi-play"/>
+                    <TextBlock Text="Launch Game w/ Args" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <Border Grid.Row="3" BorderBrush="LightGray" BorderThickness="0,2,0,0" Margin="0,0,0,0">
+            <TabControl x:Name="MainTabControl" Margin="0,0,0,10" BorderThickness="0" Padding="0">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <i:Icon  Margin="0,0,6,0" Value="mdi-gamepad-variant"/>
+                        <TextBlock Text="Game Tweaks" FontWeight="Bold"/>
+                    </StackPanel>
+                </TabItem.Header>
+
+                <Border Background="White" Padding="20">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+                        <StackPanel x:Name="GameTweaksGrid" Margin="0,0,15,0" Focusable="False">
+
+                            <!-- Mods Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,10">
+                                <TextBlock Text="Mods" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="TdGame Version:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,36,0"/>
+                                <ComboBox Grid.Column="1" x:Name="TdGameVersionComboBox" VerticalAlignment="Center" SelectionChanged="TdGameVersionComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Original"/>
+                                    <ComboBoxItem Content="TdGame Fix (by Keku)"/>
+                                    <ComboBoxItem Content="Time Trials Timer Fix (by Nulaft)"/>
+                                    <ComboBoxItem Content="TdGame Fix + Time Trials Timer Fix"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowTdGameVersionInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Developer Console:" VerticalAlignment="Center" FontWeight="Bold" MinWidth="140" Margin="0,0,10,0"/>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <Button x:Name="InstallConsoleButton" Content="Install" Click="InstallConsole_Click" Margin="0,0,10,0" Classes="raised"/>
+                                    <Button x:Name="UninstallConsoleButton" Content="Uninstall" Click="UninstallConsole_Click" Classes="outlined"/>
+                                    <Border Background="{DynamicResource MaterialDesignCardBackground}" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="4" Padding="8,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock x:Name="ConsoleStatus" Text="N/A" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                    </Border>
+                                </StackPanel>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowConsoleInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <Border Margin="0,15,0,0" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="6" Padding="10,10,10,8" Background="#0D000000">
+                                <StackPanel>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="179"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Tweaks Scripts:" VerticalAlignment="Center" FontWeight="Bold" MinWidth="129" Margin="0,0,10,0"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button x:Name="InstallTweaksScriptsButton" Content="Install" Click="InstallTweaksScripts_Click" Margin="0,0,10,0" Classes="raised"/>
+                                            <Button x:Name="UninstallTweaksScriptsButton" Content="Uninstall" Click="UninstallTweaksScripts_Click" Classes="outlined"/>
+                                            <Border Background="{DynamicResource MaterialDesignCardBackground}" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="4" Padding="8,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock x:Name="TweaksScriptsStatus" Text="N/A" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                            </Border>
+                                        </StackPanel>
+                                        <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowTweaksScriptsInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                            <i:Icon  Value="mdi-information"/>
+                                        </Button>
+                                    </Grid>
+
+                                    <StackPanel x:Name="TweaksScriptsUIInstallDependencyPanel" Margin="0,10,0,0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="179"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="Tweaks Scripts UI:" VerticalAlignment="Center" FontWeight="Bold" MinWidth="129" Margin="0,0,10,0"/>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                <Button x:Name="InstallTweaksScriptsUIButton" Content="Install" Click="InstallTweaksScriptsUI_Click" ToolTip.ShowOnDisabled="True" Margin="0,0,10,0" ToolTip.Tip="Install Tweaks Scripts first to enable this installer." Classes="raised"/>
+                                                <Button x:Name="UninstallTweaksScriptsUIButton" Content="Uninstall" Click="UninstallTweaksScriptsUI_Click" Classes="outlined"/>
+                                                <Border Background="{DynamicResource MaterialDesignCardBackground}" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="4" Padding="8,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                                                    <TextBlock x:Name="TweaksScriptsUIStatus" Text="N/A" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowTweaksScriptsUIInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                                <i:Icon  Value="mdi-information"/>
+                                            </Button>
+                                        </Grid>
+                                        <TextBlock x:Name="TweaksScriptsUIRequiresScriptsText" Text="Install 'Tweaks Scripts' first to enable Tweaks Scripts UI installation." Margin="0,6,0,0" FontSize="11" Foreground="{DynamicResource MaterialDesignBodyLight}" IsVisible="False"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Margin="0,20" Classes="separator"/>
+
+                            <!-- Patches Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,10">
+                                <TextBlock Text="Patches" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Unlocked Configs:" VerticalAlignment="Center" FontWeight="Bold" MinWidth="140" Margin="0,0,10,0"/>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <Button x:Name="PatchConfigsButton" Content="Patch" Click="PatchConfigs_Click" Width="70" Margin="0,0,10,0" Classes="raised"/>
+                                    <Button x:Name="UnpatchConfigsButton" Content="Unpatch" Click="UnpatchConfigs_Click" Width="87" Classes="outlined"/>
+                                    <Border Background="{DynamicResource MaterialDesignCardBackground}" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="4" Padding="8,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock x:Name="UnlockedConfigsStatus" Text="N/A" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                    </Border>
+                                </StackPanel>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowUnlockedConfigsInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <StackPanel Margin="0,15,0,0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="190"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Launch Arguments:" VerticalAlignment="Center" FontWeight="Bold" MinWidth="140" Margin="0,0,10,0"/>
+                                    <TextBox x:Name="LaunchArgumentsTextBox" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,8,0,0" VerticalAlignment="Center"/>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                        <Button Content="Patch" Click="ApplyLaunchArguments_Click" Width="70" Margin="0,0,10,0" Classes="raised"/>
+                                        <Button Content="Unpatch" Click="ResetLaunchArguments_Click" Width="87" Classes="outlined"/>
+                                    </StackPanel>
+                                    <Button Grid.Row="0" Grid.Column="2" Margin="5,0,0,0" Click="ShowLaunchArgumentsInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                        <i:Icon  Value="mdi-information"/>
+                                    </Button>
+                                </Grid>
+                                <Grid Margin="0,8,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="1" Grid.ColumnSpan="3" Background="{DynamicResource MaterialDesignCardBackground}" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="4" Padding="8,2" HorizontalAlignment="Left">
+                                        <TextBlock x:Name="LaunchArgumentsPatchStatusTextBlock" Text="N/A" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource MaterialDesignBodyLight}" TextWrapping="Wrap"/>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+
+                            <!-- Other Patches -->
+                            <Expander Margin="0,25,0,0" IsExpanded="False" HorizontalAlignment="Stretch" Background="Transparent" BorderThickness="0">
+                                <Expander.Header>
+                                    <TextBlock Text="Other Patches" FontWeight="SemiBold" FontSize="13" Foreground="{DynamicResource MaterialDesignBodyDark}"/>
+                                </Expander.Header>
+                                <StackPanel Margin="0,10,0,0">
+
+                                    <!-- Enable Logging -->
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Enable Logging:" VerticalAlignment="Center" FontWeight="Bold" MinWidth="140" Margin="0,0,10,0"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button x:Name="PatchLoggingButton" Content="Patch" Click="PatchLogging_Click" Width="70" Margin="0,0,10,0" Classes="raised"/>
+                                            <Button x:Name="UnpatchLoggingButton" Content="Unpatch" Click="UnpatchLogging_Click" Width="87" Classes="outlined"/>
+                                            <Border Background="{DynamicResource MaterialDesignCardBackground}" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="4" Padding="8,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock x:Name="LoggingPatchStatusTextBlock" Text="N/A" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                            </Border>
+                                        </StackPanel>
+                                        <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowLoggingInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                            <i:Icon  Value="mdi-information"/>
+                                        </Button>
+                                    </Grid>
+
+                                    <!-- Multi-instance -->
+                                    <Grid Margin="0,15,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Multi-instance:" VerticalAlignment="Center" FontWeight="Bold" MinWidth="140" Margin="0,0,10,0"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button x:Name="PatchMultiInstanceButton" Content="Patch" Click="PatchMultiInstance_Click" Width="70" Margin="0,0,10,0" Classes="raised"/>
+                                            <Button x:Name="UnpatchMultiInstanceButton" Content="Unpatch" Click="UnpatchMultiInstance_Click" Width="87" Classes="outlined"/>
+                                            <Border Background="{DynamicResource MaterialDesignCardBackground}" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="4" Padding="8,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock x:Name="MultiInstancePatchStatusTextBlock" Text="N/A" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                            </Border>
+                                        </StackPanel>
+                                        <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowMultiInstanceInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                            <i:Icon  Value="mdi-information"/>
+                                        </Button>
+                                    </Grid>
+
+                                    <!-- Ambiguous Bypass -->
+                                    <Grid Margin="0,15,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Ambiguous Bypass:" VerticalAlignment="Center" FontWeight="Bold" MinWidth="140" Margin="0,0,10,0"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Button x:Name="PatchAmbiguousBypassButton" Content="Patch" Click="PatchAmbiguousBypass_Click" Width="70" Margin="0,0,10,0" Classes="raised"/>
+                                            <Button x:Name="UnpatchAmbiguousBypassButton" Content="Unpatch" Click="UnpatchAmbiguousBypass_Click" Width="87" Classes="outlined"/>
+                                            <Border Background="{DynamicResource MaterialDesignCardBackground}" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="4" Padding="8,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock x:Name="AmbiguousBypassPatchStatusTextBlock" Text="N/A" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                            </Border>
+                                        </StackPanel>
+                                        <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowAmbiguousBypassInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                            <i:Icon  Value="mdi-information"/>
+                                        </Button>
+                                    </Grid>
+
+                                </StackPanel>
+                            </Expander>
+                            
+                            <Border Margin="0,20" Classes="separator"/>
+                            
+                            <!-- Audio Settings Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,10">
+                                <TextBlock Text="Audio Settings" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+                            
+                            <!-- Game Language Setting -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Game Language:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,36,0" Foreground="Black"/>
+                                <ComboBox Grid.Column="1" x:Name="GameLanguageComboBox" VerticalAlignment="Center" Foreground="Black" SelectionChanged="GameLanguageComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Čeština (CZE)" Foreground="Black"/>
+                                    <ComboBoxItem Content="Deutsch (DEU)" Foreground="Black"/>
+                                    <ComboBoxItem Content="English (INT)" Foreground="Black"/>
+                                    <ComboBoxItem Content="Español (ESN)" Foreground="Black"/>
+                                    <ComboBoxItem Content="Français (FRA)" Foreground="Black"/>
+                                    <ComboBoxItem Content="Italiano (ITA)" Foreground="Black"/>
+                                    <ComboBoxItem Content="Magyar (HUN)" Foreground="Black"/>
+                                    <ComboBoxItem Content="Polski (POL)" Foreground="Black"/>
+                                    <ComboBoxItem Content="Português (POR)" Foreground="Black"/>
+                                    <ComboBoxItem Content="Русский (RUS)" Foreground="Black"/>
+                                    <ComboBoxItem Content="한국어 (KOR)" Foreground="Black"/>
+                                    <ComboBoxItem Content="台灣繁體中文 (CHT)" Foreground="Black"/>
+                                    <ComboBoxItem Content="日本語 (JPN)" Foreground="Black"/>
+                                    <ComboBoxItem Content="简体中文 (CHS)" Foreground="Black"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowGameLanguageInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Audio Backend Setting -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Audio Backend:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,43,0" Foreground="Black"/>
+                                <ComboBox Grid.Column="1" x:Name="AudioBackendComboBox" VerticalAlignment="Center" Foreground="Black" SelectionChanged="AudioBackendComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="OpenAL (default)" Foreground="Black"/>
+                                    <ComboBoxItem Content="OpenAL Soft (modern)" Foreground="Black"/>
+                                    <ComboBoxItem Content="OpenAL Soft (HRTF)" Foreground="Black"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowAudioBackendInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <i:Icon  Margin="0,0,6,0" Value="mdi-monitor"/>
+                        <TextBlock Text="Graphics Tweaks" FontWeight="Bold"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Border Background="White" Padding="20">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+                        <StackPanel x:Name="GraphicsTweaksGrid" Margin="0,0,15,0" Focusable="False">
+                            
+                            <!-- Video Settings Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,40">
+                                <TextBlock Text="Video Settings" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+                            
+                            <Border Margin="0,-10,0,0" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="6" Padding="10,10,10,8" Background="#0D000000">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Grid.Row="0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                                            <TextBlock Text="Field of Vision (FOV)" FontWeight="Bold" Margin="0,0,0,10"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox x:Name="NewFovValue" Width="80" TextChanged="NewFovValue_TextChanged"/>
+                                                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">
+                                                    <Run Text="Current: "/>
+                                                    <Run x:Name="CurrentFovValue" Text="N/A" FontWeight="SemiBold"/>
+                                                </TextBlock>
+                                                <TextBlock x:Name="HorPlusStatus" Text="" Foreground="Gray" FontStyle="Italic" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Top">
+                                            <Button Content="Apply" Click="ApplyChanges_Click" Padding="20,10" Height="38" Classes="raised"/>
+                                            <Button Margin="5,0,0,0" VerticalAlignment="Center" Click="ShowFOVInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                                <i:Icon  Value="mdi-information"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,0">
+                                        <CheckBox x:Name="FovAgnosticSensCheckBox" Content="FOV-agnostic sensitivity" IsChecked="False"/>
+                                        <CheckBox x:Name="CompensatedClipCheckBox" Content="Compensated near clipping plane" IsChecked="True" Margin="20,0,0,0"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <TextBlock Text="Note: All following settings below set TdEngine.ini to read-only so Mirror's Edge does not overwrite your changes on launch. As a result, any video settings changed in-game will not be saved." FontSize="12" FontStyle="Italic" Foreground="Gray" Margin="0,20,0,0" TextWrapping="Wrap"/>
+
+                            <Grid Margin="0,20,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Resolution:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="ResolutionComboBox" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,0" SelectionChanged="ResolutionComboBox_SelectionChanged"/>
+                                <Border Grid.Column="2" Background="{DynamicResource MaterialDesignCardBackground}" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="4" Padding="8,4" Margin="10,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock x:Name="HighResFixStatus" Text="High-Res Fix N/A" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                </Border>
+                                <Button Grid.Column="3" Margin="5,0,0,0" VerticalAlignment="Center" Click="ShowHighResFixInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Render Resolution Slider -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Render Resolution:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <Slider x:Name="RenderResolutionSlider" Grid.Column="1" Minimum="25" Maximum="200" Value="100" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center" ValueChanged="RenderResolutionSlider_ValueChanged"/>
+                                <TextBlock x:Name="RenderResolutionValue" Grid.Column="2" Text="100%" VerticalAlignment="Center" Margin="10,0,0,0" MinWidth="45"/>
+                                <Button Grid.Column="3" Margin="5,0,0,0" Click="ShowRenderResolutionInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- VSync -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="VSync:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="VSyncComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="VSyncComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowVSyncInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- FPS Limit -->
+                            <StackPanel Margin="0,20,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="190"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="FPS Limit:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                    <TextBox x:Name="FPSLimitTextBox" Grid.Column="1" VerticalAlignment="Center"/>
+                                    <Border Grid.Column="2" Background="{DynamicResource MaterialDesignCardBackground}" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" CornerRadius="4" Padding="8,4" Margin="10,0,0,0" VerticalAlignment="Center">
+                                        <TextBlock x:Name="FPSLimitStatus" Text="N/A" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource MaterialDesignBodyLight}"/>
+                                    </Border>
+                                    <Button Grid.Column="3" Margin="5,0,0,0" VerticalAlignment="Center" Click="ShowFPSLimitInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                        <i:Icon  Value="mdi-information"/>
+                                    </Button>
+                                </Grid>
+                                <StackPanel Orientation="Horizontal" Margin="190,0,0,10">
+                                    <Button Content="Apply" Click="ApplyFPSLimit_Click" Margin="0,0,10,0" Classes="raised"/>
+                                    <Button Content="Remove Limit" Click="RemoveFPSLimit_Click" Classes="outlined"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Anti-Aliasing -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Anti-Aliasing:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="AntiAliasingComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="AntiAliasingComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Off"/>
+                                    <ComboBoxItem Content="2x"/>
+                                    <ComboBoxItem Content="4x"/>
+                                    <ComboBoxItem Content="8x"/>
+                                    <ComboBoxItem Content="8xQ"/>
+                                    <ComboBoxItem Content="16xQ"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowAntiAliasingInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- PhysX -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="PhysX:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="PhysXComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="PhysXComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowPhysXInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- PhysX FPS -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="PhysX FPS:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <TextBox x:Name="PhysXFPSTextBox" Grid.Column="1" VerticalAlignment="Center"/>
+                                <Button Grid.Column="2" Content="Apply" Margin="10,0,0,0" Click="ApplyPhysXFPS_Click" Classes="raised"/>
+                                <Button Grid.Column="3" Margin="5,0,0,0" Click="ShowPhysXFPSInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <Border Margin="0,20" Classes="separator"/>
+
+                            <!-- Quality Presets Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,5">
+                                <TextBlock Text="Quality Presets" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Note: Selecting a preset will override any custom individual settings you have applied." FontSize="12" FontStyle="Italic" Foreground="Gray" Margin="0,0,0,10"/>
+
+                            <!-- Texture Detail Preset -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Texture Detail:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="TextureDetailComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="TextureDetailComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Custom" IsEnabled="False" IsVisible="False"/>
+                                    <ComboBoxItem Content="Lowest"/>
+                                    <ComboBoxItem Content="Low"/>
+                                    <ComboBoxItem Content="Medium"/>
+                                    <ComboBoxItem Content="High"/>
+                                    <ComboBoxItem Content="Highest"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowTextureDetailInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Graphics Quality Preset -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Graphics Quality:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="GraphicsQualityComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="GraphicsQualityComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Custom" IsEnabled="False" IsVisible="False"/>
+                                    <ComboBoxItem Content="Lowest"/>
+                                    <ComboBoxItem Content="Low"/>
+                                    <ComboBoxItem Content="Medium"/>
+                                    <ComboBoxItem Content="High"/>
+                                    <ComboBoxItem Content="Highest"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowGraphicsQualityInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <Border Margin="0,20" Classes="separator"/>
+
+                            <!-- Individual Settings Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,5">
+                                <TextBlock Text="Individual Settings" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="Note: Modifying these settings may cause the in-game video options to display 'Medium' as a fallback label. This does not indicate your settings have been changed to medium quality." FontSize="12" FontStyle="Italic" Foreground="Gray" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                            <!-- Anisotropic Filtering -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Anisotropic Filtering:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="AnisotropicFilteringComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="AnisotropicFilteringComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Off"/>
+                                    <ComboBoxItem Content="2x"/>
+                                    <ComboBoxItem Content="4x"/>
+                                    <ComboBoxItem Content="8x"/>
+                                    <ComboBoxItem Content="16x"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowAnisotropicFilteringInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Static Decals -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Static Decals:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="StaticDecalsComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="StaticDecalsComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowStaticDecalsInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Dynamic Decals -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Dynamic Decals:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="DynamicDecalsComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="DynamicDecalsComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowDynamicDecalsInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Radial Blur -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Radial Blur:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="RadialBlurComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="RadialBlurComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowRadialBlurInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Streak Effect -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Streak Effect:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="StreakEffectComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="StreakEffectComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowStreakEffectInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Bloom & DoF -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Bloom &amp; DoF:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="BloomDoFComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="BloomDoFComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowBloomDoFInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Lens Flare -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Lens Flare:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="LensFlareComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="LensFlareComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowLensFlareInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Dynamic Lights -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Dynamic Lights:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="DynamicLightsComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="DynamicLightsComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowDynamicLightsInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Dynamic Shadows -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Dynamic Shadows:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="DynamicShadowsComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="DynamicShadowsComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowDynamicShadowsInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- HQ Dynamic Shadows -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="HQ Dynamic Shadows:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="HQDynamicShadowsComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="HQDynamicShadowsComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowHQDynamicShadowsInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Lightmaps -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Lightmaps:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="LightmapsComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="LightmapsComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowLightmapsInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Sun Haze -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Sun Haze:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="SunHazeComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="SunHazeComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowSunHazeInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Tone Mapping -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Tone Mapping:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="ToneMappingComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="ToneMappingComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled"/>
+                                    <ComboBoxItem Content="Disabled"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowToneMappingInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Texture Management -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Texture Management:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <ComboBox x:Name="TextureManagementComboBox" Grid.Column="1" VerticalAlignment="Center" SelectionChanged="TextureManagementComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Modern"/>
+                                    <ComboBoxItem Content="Default"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowTextureManagementInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <Border Margin="0,20" Classes="separator"/>
+
+                            <!-- LOD Settings Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,10">
+                                <TextBlock Text="LOD Settings" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+                            
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Minimum LOD:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <TextBox x:Name="MinLODTextBox" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <Button Grid.Column="2" Content="Apply" Click="ApplyMinLOD_Click" VerticalAlignment="Center" Margin="0,0,5,0" Classes="raised"/>
+                                <Button Grid.Column="3" Click="ShowMinLODInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Maximum LOD:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <TextBox x:Name="MaxLODTextBox" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <Button Grid.Column="2" Content="Apply" Click="ApplyMaxLOD_Click" VerticalAlignment="Center" Margin="0,0,5,0" Classes="raised"/>
+                                <Button Grid.Column="3" Click="ShowMaxLODInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="LOD Bias:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0"/>
+                                <TextBox x:Name="LODBiasTextBox" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                <Button Grid.Column="2" Content="Apply" Click="ApplyLODBias_Click" VerticalAlignment="Center" Margin="0,0,5,0" Classes="raised"/>
+                                <Button Grid.Column="3" Click="ShowLODBiasInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <i:Icon  Margin="0,0,6,0" Value="mdi-tune"/>
+                        <TextBlock Text="Other Tweaks" FontWeight="Bold"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <Border Background="White" Padding="20">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+                        <StackPanel Margin="0,0,15,0" Focusable="False">
+                            <!-- Input Settings Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,10">
+                                <TextBlock Text="Input Settings" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+                            
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Mouse Smoothing:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <ComboBox x:Name="MouseSmoothingComboBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" SelectionChanged="MouseSmoothingComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled" Foreground="Black"/>
+                                    <ComboBoxItem Content="Disabled" Foreground="Black"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowMouseSmoothingInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Uniform Sensitivity:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <ComboBox x:Name="UniformSensitivityComboBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" SelectionChanged="UniformSensitivityComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled" Foreground="Black"/>
+                                    <ComboBoxItem Content="Disabled" Foreground="Black"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowUniformSensitivityInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="cm/360° Converter:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBox x:Name="DpiTextBox" Width="64" VerticalAlignment="Center" Foreground="Black" Margin="0,0,10,0"/>
+                                    <TextBox x:Name="Cm360TextBox" Width="64" VerticalAlignment="Center" Foreground="Black" Margin="0,0,10,0"/>
+                                    <Button Content="Apply" VerticalAlignment="Center" Margin="0,0,10,0" Click="ApplyCm360_Click" Classes="raised"/>
+                                    <Button Content="Reset" VerticalAlignment="Center" Margin="0,0,0,0" Click="ResetCm360_Click" Classes="outlined"/>
+                                </StackPanel>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowCm360Info_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Gamepad Buttons:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <ComboBox x:Name="GamepadButtonsComboBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" SelectionChanged="GamepadButtonsComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Xbox" Foreground="Black"/>
+                                    <ComboBoxItem Content="PS3" Foreground="Black"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowGamepadButtonsInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Separator -->
+                            <Border Margin="0,20" Classes="separator"/>
+                            
+                            <!-- Custom Keybinds Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,10">
+                                <TextBlock Text="Custom Keybinds" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+                            
+                            <!-- Restart Level Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Restart Level:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="RestartLevelKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowRestartLevelKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Load Last Checkpoint Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Load Last Checkpoint:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="LoadLastCheckpointKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowLoadLastCheckpointKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Restart Time Trial Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Restart Time Trial:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="RestartTimeTrialKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowRestartTimeTrialKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Reset Reaction Time Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Reset Reaction Time:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="ResetReactionTimeKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowResetReactionTimeKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- God Mode Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="God Mode:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="GodModeKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowGodModeKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Kill Bots Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Kill Bots:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="KillBotsKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowKillBotsKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Third Person Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Third Person:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="ThirdPersonKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowThirdPersonKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Toggle HUD Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Toggle HUD:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="ToggleHUDKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowToggleHUDKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- FPS Indicator Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="FPS Indicator:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="FPSIndicatorKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowFPSIndicatorKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Level Stats Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Level Stats:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="LevelStatsKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowLevelStatsKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Triggers & Volumes Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Triggers &amp; Volumes:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="TriggersVolumesKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowTriggersVolumesKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Show Collision Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Show Collision:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="ShowCollisionKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowShowCollisionKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Separator -->
+                            <Border Margin="0,20" Classes="separator"/>
+                            
+                            <!-- Cheat/Trainer Keybinds Section Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,10">
+                                <TextBlock Text="Cheat/Trainer Keybinds" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+                            
+                            <!-- Noclip Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Noclip:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="NoclipKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowNoclipKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Save State Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Save State:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="SaveStateKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowSaveStateKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Load Saved State Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Load Saved State:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="LoadSavedStateKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowLoadSavedStateKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Save Timer Location Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Save Timer Location:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="SaveTimerLocationKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowSaveTimerLocationKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Delete Viewed Actor Keybind -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Delete Viewed Actor:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="DeleteViewedActorKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowDeleteViewedActorKeybindInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <Border Margin="0,20" Classes="separator"/>
+
+                            <!-- Macro Keybinds Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,15">
+                                <TextBlock Text="Macro Keybinds (Softimer)" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Scroll Down Macro Key -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Scroll Down Macro Key:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="ScrollDownMacroKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowScrollDownMacroKeyInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Scroll Up Macro Key -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Scroll Up Macro Key:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <TextBox x:Name="ScrollUpMacroKeyTextBox" Grid.Column="1" VerticalAlignment="Center" Foreground="Black" IsReadOnly="True" Focusable="False" Cursor="Hand" PointerPressed="KeybindField_Click"/>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowScrollUpMacroKeyInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Separator -->
+                            <Border Margin="0,20" Classes="separator"/>
+                            
+                            <!-- Initialisation Settings Section Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,10">
+                                <TextBlock Text="Initialisation Settings" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+                            
+                            <!-- Intro Video Setting -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Intro Video:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <ComboBox Grid.Column="1" x:Name="IntroVideoComboBox" VerticalAlignment="Center" Foreground="Black" SelectionChanged="IntroVideoComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled" Foreground="Black"/>
+                                    <ComboBoxItem Content="Disabled" Foreground="Black"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowIntroVideoInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Main Menu Delay Setting -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Main Menu Delay:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <ComboBox Grid.Column="1" x:Name="MainMenuDelayComboBox" VerticalAlignment="Center" Foreground="Black" SelectionChanged="MainMenuDelayComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Enabled" Foreground="Black"/>
+                                    <ComboBoxItem Content="Disabled" Foreground="Black"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowMainMenuDelayInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                            
+                            <!-- Time Trial Countdown Setting -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Time Trial Countdown:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <ComboBox Grid.Column="1" x:Name="TimeTrialCountdownComboBox" VerticalAlignment="Center" Foreground="Black" SelectionChanged="TimeTrialCountdownComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="4 seconds (default)" Foreground="Black"/>
+                                    <ComboBoxItem Content="3 seconds ('Ready' message starts sooner)" Foreground="Black"/>
+                                    <ComboBoxItem Content="2 seconds (starts on 'Set' message)" Foreground="Black"/>
+                                    <ComboBoxItem Content="1 second (starts on 'Go' message)" Foreground="Black"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowTimeTrialCountdownInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <!-- Skip Online Check Setting -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Skip Online Check:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <ComboBox Grid.Column="1" x:Name="SkipOnlineCheckComboBox" VerticalAlignment="Center" Foreground="Black" SelectionChanged="SkipOnlineCheckComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Disabled" Foreground="Black"/>
+                                    <ComboBoxItem Content="Enabled" Foreground="Black"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowSkipOnlineCheckInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+
+                            <Border Margin="0,20" Classes="separator"/>
+
+                            <!-- Community Mods Header -->
+                            <Border Background="{DynamicResource PrimaryHueLightBrush}" CornerRadius="4" Padding="10,5" Margin="0,0,0,15">
+                                <TextBlock Text="Community Mods" FontWeight="Bold" FontSize="16" Foreground="White" VerticalAlignment="Center"/>
+                            </Border>
+
+                            <!-- Cinematic Faith Model Setting -->
+                            <Grid Margin="0,15,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Cinematic Faith Model:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,20,0" Foreground="Black"/>
+                                <ComboBox Grid.Column="1" x:Name="CinematicFaithComboBox" VerticalAlignment="Center" Foreground="Black" SelectionChanged="CinematicFaithComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Disabled" Foreground="Black"/>
+                                    <ComboBoxItem Content="Enabled" Foreground="Black"/>
+                                </ComboBox>
+                                <Button Grid.Column="2" Margin="5,0,0,0" Click="ShowCinematicFaithInfo_Click" Classes="icon-btn" ToolTip.Tip="Information">
+                                    <i:Icon  Value="mdi-information"/>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </TabItem>
+        </TabControl>
+        </Border>
+
+        <DockPanel Grid.Row="4" LastChildFill="False">
+            <ContentControl VerticalAlignment="Center" DockPanel.Dock="Left">
+                <TextBlock x:Name="StatusTextBlock" Text="Ready. Please select your Mirror's Edge game directory." VerticalAlignment="Center"/>
+            </ContentControl>
+            <ContentControl HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Right">
+                <ProgressBar x:Name="DownloadProgressBar" IsIndeterminate="True" Width="150" Height="12" VerticalAlignment="Center" IsVisible="False"/>
+            </ContentControl>
+        </DockPanel>
+    </Grid>
+    </Window>

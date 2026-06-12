@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<RootNamespace>MirrorsEdgeTweaks</RootNamespace>
+		<AssemblyName>MirrorsEdgeTweaks</AssemblyName>
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+
+		<!-- Version Information (tracks upstream) -->
+		<Version>4.4.2</Version>
+		<AssemblyVersion>4.4.2.0</AssemblyVersion>
+		<FileVersion>4.4.2.0</FileVersion>
+		<InformationalVersion>4.4.2-linux</InformationalVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<AvaloniaResource Include="Icon.ico" />
+		<EmbeddedResource Include="Versions\*.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="11.3.17" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.3.17" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.17" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.17" />
+		<PackageReference Include="Projektanker.Icons.Avalonia" Version="9.6.2" />
+		<PackageReference Include="Projektanker.Icons.Avalonia.MaterialDesign" Version="9.6.2" />
+		<PackageReference Include="Eliot.UELib" Version="1.12.0" />
+		<PackageReference Include="NativeSharpLzo" Version="0.3.5" />
+	</ItemGroup>
+
+</Project>
