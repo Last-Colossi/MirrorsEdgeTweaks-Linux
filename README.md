@@ -40,4 +40,4 @@ runtime needs to be installed (works on immutable distros like Bazzite).
 - `tools/` contains the scripts used to mechanically convert the upstream WPF
   XAML/code-behind to Avalonia, useful when rebasing onto a newer upstream release.
 
-Upstream project by softsoundd (MIT). Port generated with Claude Code.
+Upstream project by softsoundd (MIT).
