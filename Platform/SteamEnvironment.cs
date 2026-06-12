@@ -204,6 +204,20 @@ namespace MirrorsEdgeTweaks.Platform
         {
             var errors = new List<string>();
 
+            // Inside a Flatpak sandbox we cannot spawn steam/flatpak directly; the
+            // steam:// URL goes through the desktop's URI portal instead.
+            if (Environment.GetEnvironmentVariable("FLATPAK_ID") != null)
+            {
+                string sandboxUrl = string.IsNullOrWhiteSpace(arguments)
+                    ? $"steam://rungameid/{MirrorsEdgeAppId}"
+                    : $"steam://run/{MirrorsEdgeAppId}//{Uri.EscapeDataString(arguments)}/";
+                if (TryStart("xdg-open", sandboxUrl, errors))
+                {
+                    return;
+                }
+                throw new InvalidOperationException($"Could not open {sandboxUrl}. {string.Join(" | ", errors)}");
+            }
+
             if (IsFlatpakSteam() &&
                 TryStart("flatpak", BuildArgs("run com.valvesoftware.Steam -applaunch", arguments), errors))
             {

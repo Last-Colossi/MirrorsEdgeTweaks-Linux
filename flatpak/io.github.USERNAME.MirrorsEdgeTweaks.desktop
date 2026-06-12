@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Mirror's Edge Tweaks
+Comment=Game fixes and tweaks for the Steam version of Mirror's Edge (Proton)
+Exec=MirrorsEdgeTweaks
+Icon=io.github.USERNAME.MirrorsEdgeTweaks
+Categories=Game;Utility;
+StartupWMClass=MirrorsEdgeTweaks

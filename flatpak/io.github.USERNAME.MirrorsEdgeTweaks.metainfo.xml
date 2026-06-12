@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.USERNAME.MirrorsEdgeTweaks</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Mirror's Edge Tweaks</name>
+  <summary>Game fixes and tweaks for Mirror's Edge on Steam</summary>
+  <developer id="io.github.USERNAME">
+    <name>Matt (Linux port); original by softsoundd</name>
+  </developer>
+  <description>
+    <p>
+      A Linux-native port of softsoundd's Mirror's Edge Tweaks, for the Steam
+      version of Mirror's Edge (2008) running under Proton. All changes are
+      persistent file modifications - no memory hooks or injection.
+    </p>
+    <p>Features include:</p>
+    <ul>
+      <li>Developer console and command-line argument unlocking</li>
+      <li>Field-of-view editing and unlocked aspect ratios</li>
+      <li>High-resolution UI fix and full graphics customisation</li>
+      <li>FPS limiter control and PhysX cloth tuning</li>
+      <li>Custom keybinds, speedrun macros, and gamepad button prompts</li>
+      <li>Game language switching and OpenAL Soft audio with HRTF</li>
+    </ul>
+    <p>
+      Automatically finds the game across Steam libraries (native and Flatpak
+      Steam) and edits configs inside the game's Proton prefix. Mirror's Edge
+      must be launched once via Steam before config tweaks become available.
+    </p>
+    <p>
+      This project is not affiliated with EA or DICE. Based on
+      MirrorsEdgeTweaks by softsoundd (MIT licence).
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.USERNAME.MirrorsEdgeTweaks.desktop</launchable>
+  <url type="homepage">https://github.com/USERNAME/MirrorsEdgeTweaks-Linux</url>
+  <url type="bugtracker">https://github.com/USERNAME/MirrorsEdgeTweaks-Linux/issues</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Game Tweaks tab</caption>
+      <image>https://raw.githubusercontent.com/USERNAME/MirrorsEdgeTweaks-Linux/main/flatpak/screenshots/game-tweaks.png</image>
+    </screenshot>
+  </screenshots>
+  <content_rating type="oars-1.1" />
+  <categories>
+    <category>Game</category>
+    <category>Utility</category>
+  </categories>
+  <releases>
+    <release version="4.4.2" date="2026-06-13">
+      <description><p>Initial Linux release, tracking upstream 4.4.2.</p></description>
+    </release>
+  </releases>
+</component>
