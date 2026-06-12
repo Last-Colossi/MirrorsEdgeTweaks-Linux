@@ -1,0 +1,46 @@
+# Flathub manifest skeleton. Before submitting:
+#  1. Replace USERNAME with your GitHub username (id must match repo ownership
+#     for io.github.* app IDs).
+#  2. Generate the offline NuGet sources file with flatpak-dotnet-generator:
+#     https://github.com/flatpak/flatpak-builder-tools/tree/master/dotnet
+#     python3 flatpak-dotnet-generator.py nuget-sources.json MirrorsEdgeTweaks.csproj
+#  3. Pin the git tag/commit below to a tagged release of your repo.
+app-id: io.github.USERNAME.MirrorsEdgeTweaks
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.dotnet8
+build-options:
+  prepend-path: /usr/lib/sdk/dotnet8/bin
+  append-ld-library-path: /usr/lib/sdk/dotnet8/lib
+  env:
+    DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+command: MirrorsEdgeTweaks
+finish-args:
+  - --share=ipc
+  - --share=network            # downloads mod packages from GitHub
+  - --socket=x11               # Avalonia uses X11/XWayland
+  - --device=dri
+  # Steam game files + Proton prefix (native and Flatpak Steam):
+  - --filesystem=~/.local/share/Steam
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/.local/share/Steam
+  # Extra Steam library locations on SD cards / extra drives:
+  - --filesystem=/run/media
+modules:
+  - name: mirrorsedge-tweaks
+    buildsystem: simple
+    build-commands:
+      - dotnet publish MirrorsEdgeTweaks.csproj -c Release -r linux-x64
+        --self-contained true --source ./nuget-sources -o /app/bin
+      - install -Dm644 flatpak/io.github.USERNAME.MirrorsEdgeTweaks.metainfo.xml
+        -t /app/share/metainfo
+      - install -Dm644 flatpak/io.github.USERNAME.MirrorsEdgeTweaks.desktop
+        -t /app/share/applications
+      - install -Dm644 flatpak/icons/mirrorsedge-tweaks-256.png
+        /app/share/icons/hicolor/256x256/apps/io.github.USERNAME.MirrorsEdgeTweaks.png
+    sources:
+      - type: git
+        url: https://github.com/USERNAME/MirrorsEdgeTweaks-Linux.git
+        tag: v4.4.2
+      - nuget-sources.json
