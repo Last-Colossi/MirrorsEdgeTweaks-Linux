@@ -1,0 +1,140 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Styles.Resources>
+        <!-- Mirror's Edge red palette, matching the WPF original's CustomColorTheme -->
+        <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#f44336" />
+        <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#d32f2f" />
+        <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#e57373" />
+        <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#FFFFFF" />
+
+        <!-- MaterialDesign brush keys referenced throughout MainWindow.axaml -->
+        <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FAFAFA" />
+        <SolidColorBrush x:Key="MaterialDesignBody" Color="#DD000000" />
+        <SolidColorBrush x:Key="MaterialDesignBodyLight" Color="#757575" />
+        <SolidColorBrush x:Key="MaterialDesignBodyDark" Color="#424242" />
+        <SolidColorBrush x:Key="MaterialDesignDivider" Color="#1F000000" />
+        <SolidColorBrush x:Key="MaterialDesignCardBackground" Color="#FFFFFF" />
+
+        <!-- Retheme Fluent's TabItem resources: red header strip, white text in every
+             state (overriding the theme resources beats fighting template bindings) -->
+        <SolidColorBrush x:Key="TabItemHeaderBackgroundUnselected" Color="#d32f2f" />
+        <SolidColorBrush x:Key="TabItemHeaderBackgroundUnselectedPointerOver" Color="#f44336" />
+        <SolidColorBrush x:Key="TabItemHeaderBackgroundUnselectedPressed" Color="#f44336" />
+        <SolidColorBrush x:Key="TabItemHeaderBackgroundSelected" Color="#f44336" />
+        <SolidColorBrush x:Key="TabItemHeaderBackgroundSelectedPointerOver" Color="#f44336" />
+        <SolidColorBrush x:Key="TabItemHeaderBackgroundSelectedPressed" Color="#f44336" />
+        <SolidColorBrush x:Key="TabItemHeaderBackgroundDisabled" Color="#80d32f2f" />
+        <SolidColorBrush x:Key="TabItemHeaderForegroundUnselected" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="TabItemHeaderForegroundUnselectedPointerOver" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="TabItemHeaderForegroundUnselectedPressed" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="TabItemHeaderForegroundSelected" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="TabItemHeaderForegroundSelectedPointerOver" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="TabItemHeaderForegroundSelectedPressed" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="TabItemHeaderForegroundDisabled" Color="#B3FFFFFF" />
+        <SolidColorBrush x:Key="TabItemHeaderSelectedPipeFill" Color="Transparent" />
+
+        <!-- Fluent accent (sliders, checkboxes, combo highlights) follows the ME red -->
+        <Color x:Key="SystemAccentColor">#cd2129</Color>
+        <Color x:Key="SystemAccentColorDark1">#b71c1c</Color>
+        <Color x:Key="SystemAccentColorDark2">#a31515</Color>
+        <Color x:Key="SystemAccentColorDark3">#8e0f0f</Color>
+        <Color x:Key="SystemAccentColorLight1">#f44336</Color>
+        <Color x:Key="SystemAccentColorLight2">#e57373</Color>
+        <Color x:Key="SystemAccentColorLight3">#ef9a9a</Color>
+    </Styles.Resources>
+
+    <!-- Raised (accent) buttons -->
+    <Style Selector="Button.raised">
+        <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="12,5" />
+    </Style>
+    <Style Selector="Button.raised:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}" />
+        <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.raised:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="#b71c1c" />
+        <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.raised:disabled /template/ ContentPresenter">
+        <Setter Property="Background" Value="#E0E0E0" />
+        <Setter Property="TextElement.Foreground" Value="#61000000" />
+    </Style>
+
+    <!-- Outlined buttons -->
+    <Style Selector="Button.outlined">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueDarkBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueDarkBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="12,5" />
+    </Style>
+    <Style Selector="Button.outlined:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#14f44336" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource PrimaryHueDarkBrush}" />
+    </Style>
+    <Style Selector="Button.outlined:disabled /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="TextElement.Foreground" Value="#61000000" />
+    </Style>
+
+    <!-- Icon-only buttons (the round MD info buttons) -->
+    <Style Selector="Button.icon-btn">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="#757575" />
+        <Setter Property="Padding" Value="6" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="Button.icon-btn:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#14000000" />
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource PrimaryHueDarkBrush}" />
+    </Style>
+
+    <!-- Section separators -->
+    <Style Selector="Border.separator">
+        <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}" />
+        <Setter Property="Height" Value="1" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+    </Style>
+
+    <!-- Tab strip mirrors the red MD tab headers -->
+    <Style Selector="TabControl">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style Selector="TabItem">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="16,8" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Margin" Value="0,0,2,0" />
+    </Style>
+    <Style Selector="TabItem /template/ Border#PART_LayoutRoot">
+        <Setter Property="CornerRadius" Value="4,4,0,0" />
+    </Style>
+    <!-- Hide the Fluent selection pipe; the original used background color instead -->
+    <Style Selector="TabItem /template/ Border#PART_SelectedPipe">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <!-- Inputs keep compact MD-ish sizing -->
+    <Style Selector="ComboBox">
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBox">
+        <Setter Property="MinHeight" Value="30" />
+    </Style>
+
+    <Style Selector="ProgressBar">
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}" />
+    </Style>
+
+</Styles>
