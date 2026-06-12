@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.USERNAME.MirrorsEdgeTweaks</id>
+  <id>io.github.last_colossi.MirrorsEdgeTweaks</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT</project_license>
   <name>Mirror's Edge Tweaks</name>
   <summary>Game fixes and tweaks for Mirror's Edge on Steam</summary>
-  <developer id="io.github.USERNAME">
-    <name>Matt (Linux port); original by softsoundd</name>
+  <developer id="io.github.last_colossi">
+    <name>Last-Colossi (Linux port); original by softsoundd</name>
   </developer>
   <description>
     <p>
@@ -33,13 +33,13 @@
       MirrorsEdgeTweaks by softsoundd (MIT licence).
     </p>
   </description>
-  <launchable type="desktop-id">io.github.USERNAME.MirrorsEdgeTweaks.desktop</launchable>
-  <url type="homepage">https://github.com/USERNAME/MirrorsEdgeTweaks-Linux</url>
-  <url type="bugtracker">https://github.com/USERNAME/MirrorsEdgeTweaks-Linux/issues</url>
+  <launchable type="desktop-id">io.github.last_colossi.MirrorsEdgeTweaks.desktop</launchable>
+  <url type="homepage">https://github.com/Last-Colossi/MirrorsEdgeTweaks-Linux</url>
+  <url type="bugtracker">https://github.com/Last-Colossi/MirrorsEdgeTweaks-Linux/issues</url>
   <screenshots>
     <screenshot type="default">
       <caption>Game Tweaks tab</caption>
-      <image>https://raw.githubusercontent.com/USERNAME/MirrorsEdgeTweaks-Linux/main/flatpak/screenshots/game-tweaks.png</image>
+      <image>https://raw.githubusercontent.com/Last-Colossi/MirrorsEdgeTweaks-Linux/main/flatpak/screenshots/game-tweaks.png</image>
     </screenshot>
   </screenshots>
   <content_rating type="oars-1.1" />
