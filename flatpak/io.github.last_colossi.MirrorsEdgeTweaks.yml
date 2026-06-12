@@ -1,11 +1,9 @@
-# Flathub manifest skeleton. Before submitting:
-#  1. Replace USERNAME with your GitHub username (id must match repo ownership
-#     for io.github.* app IDs).
-#  2. Generate the offline NuGet sources file with flatpak-dotnet-generator:
+# Flathub manifest. Before submitting:
+#  1. Generate the offline NuGet sources file with flatpak-dotnet-generator:
 #     https://github.com/flatpak/flatpak-builder-tools/tree/master/dotnet
 #     python3 flatpak-dotnet-generator.py nuget-sources.json MirrorsEdgeTweaks.csproj
-#  3. Pin the git tag/commit below to a tagged release of your repo.
-app-id: io.github.USERNAME.MirrorsEdgeTweaks
+#  2. Pin the git tag/commit below to a tagged release of your repo.
+app-id: io.github.last_colossi.MirrorsEdgeTweaks
 runtime: org.freedesktop.Platform
 runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
@@ -33,14 +31,14 @@ modules:
     build-commands:
       - dotnet publish MirrorsEdgeTweaks.csproj -c Release -r linux-x64
         --self-contained true --source ./nuget-sources -o /app/bin
-      - install -Dm644 flatpak/io.github.USERNAME.MirrorsEdgeTweaks.metainfo.xml
+      - install -Dm644 flatpak/io.github.last_colossi.MirrorsEdgeTweaks.metainfo.xml
         -t /app/share/metainfo
-      - install -Dm644 flatpak/io.github.USERNAME.MirrorsEdgeTweaks.desktop
+      - install -Dm644 flatpak/io.github.last_colossi.MirrorsEdgeTweaks.desktop
         -t /app/share/applications
       - install -Dm644 flatpak/icons/mirrorsedge-tweaks-256.png
-        /app/share/icons/hicolor/256x256/apps/io.github.USERNAME.MirrorsEdgeTweaks.png
+        /app/share/icons/hicolor/256x256/apps/io.github.last_colossi.MirrorsEdgeTweaks.png
     sources:
       - type: git
-        url: https://github.com/USERNAME/MirrorsEdgeTweaks-Linux.git
+        url: https://github.com/Last-Colossi/MirrorsEdgeTweaks-Linux.git
         tag: v4.4.2
       - nuget-sources.json
