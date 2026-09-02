@@ -1,0 +1,4 @@
+#!/bin/sh
+# Entry point for the Mirror's Edge Tweaks AppImage.
+HERE="$(dirname "$(readlink -f "$0")")"
+exec "$HERE/usr/bin/MirrorsEdgeTweaks" "$@"
