@@ -10,11 +10,11 @@
 		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 		<AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
 
-		<!-- Version Information (tracks upstream) -->
+		<!-- Version tracks upstream; the fourth part is this port's own revision. -->
 		<Version>4.4.2</Version>
 		<AssemblyVersion>4.4.2.0</AssemblyVersion>
-		<FileVersion>4.4.2.0</FileVersion>
-		<InformationalVersion>4.4.2-linux</InformationalVersion>
+		<FileVersion>4.4.2.1</FileVersion>
+		<InformationalVersion>4.4.2.1-linux</InformationalVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
