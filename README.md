@@ -35,8 +35,9 @@ runtime needs to be installed (works on immutable distros like Bazzite).
 
 - The game must be launched once through Steam before config-based tweaks are
   available (the Proton prefix and ini files are created on first run).
-- For the OpenAL Soft audio backend, Proton may need
-  `WINEDLLOVERRIDES="openal32=n,b" %command%` in the game's Steam launch options.
+- The OpenAL audio backends install into `Binaries/` next to `MirrorsEdge.exe` and are
+  loaded from there, so no Wine DLL override is needed. (Current Proton builds ship no
+  `openal32` of their own, so there is no builtin that could shadow the game's copy.)
 - `tools/` contains the scripts used to mechanically convert the upstream WPF
   XAML/code-behind to Avalonia, useful when rebasing onto a newer upstream release.
 
