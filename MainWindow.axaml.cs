@@ -41,6 +41,7 @@ namespace MirrorsEdgeTweaks
         private readonly IOffsetFinderService _offsetFinderService;
         private readonly IUIScalingService _uiScalingService;
         private readonly IGraphicsSettingsService _graphicsSettingsService;
+        private readonly IAssetUrlProvider _assetUrls = AssetUrlProvider.Shared;
 
         private bool _isInitializingResolutionComboBox = false;
         private bool _isInitializingGraphicsSettings = false;
@@ -63,9 +64,7 @@ namespace MirrorsEdgeTweaks
 
         private static string GetSettingsIniPath()
         {
-            string configDir = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "MirrorsEdgeTweaks");
+            string configDir = AppPaths.ConfigDirectory;
             Directory.CreateDirectory(configDir);
             return Path.Combine(configDir, "metweaksconfig.ini");
         }
@@ -117,6 +116,11 @@ namespace MirrorsEdgeTweaks
             _offsetFinderService = new OffsetFinderService();
             _uiScalingService = new UIScalingService(_packageService, _fileService, _offsetFinderService, _decompressionService);
             _graphicsSettingsService = new GraphicsSettingsService();
+
+            // Resolve where assets live while the UI is still coming up, so the first
+            // download doesn't stall on it. Failures are absorbed by the provider, which
+            // falls back to the cached manifest and then to the compiled-in default.
+            _ = _assetUrls.EnsureLoadedAsync();
 
             _gameStatusViewModel = new GameStatusViewModel();
             _fovViewModel = new FovViewModel();
@@ -1556,13 +1560,16 @@ namespace MirrorsEdgeTweaks
             }
 
             string gameVersion = _gameStatusViewModel.GameVersion;
-            string? downloadUrl = GameVersionHelper.GetDownloadUrl(gameVersion, selectedVersionName);
+            string? fileName = GameVersionHelper.GetDownloadFileName(gameVersion, selectedVersionName);
 
-            if (string.IsNullOrEmpty(downloadUrl))
+            if (string.IsNullOrEmpty(fileName))
             {
                 DialogHelper.ShowMessage("URL Error", "Could not determine the download URL for the selected game version and TdGame variant.", DialogHelper.MessageType.Error);
                 return;
             }
+
+            await _assetUrls.EnsureLoadedAsync();
+            string downloadUrl = _assetUrls.For(fileName);
 
             _gameStatusViewModel.IsGameTweaksEnabled = false;
             _downloadProgressViewModel.IsDownloadProgressVisible = true;
@@ -2005,7 +2012,8 @@ namespace MirrorsEdgeTweaks
                     ModifyIniFile(_config.TdEngineIniPath, "Engine.Engine", "ConsoleClassName", "MirrorsEdgeConsole.MirrorsEdgeConsole");
                     ModifyIniFile(_config.TdInputIniPath, "Engine.Console", "TypeKey", "Tab");
 
-                    const string consoleUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/MirrorsEdgeConsole.zip";
+                    await _assetUrls.EnsureLoadedAsync();
+                    string consoleUrl = _assetUrls.For("MirrorsEdgeConsole.zip");
                     string tempZipPath = Path.Combine(Path.GetTempPath(), "MirrorsEdgeConsole.zip");
 
                     using (var client = new HttpClient())
@@ -2184,7 +2192,8 @@ namespace MirrorsEdgeTweaks
                 return;
             }
 
-            const string downloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/MirrorsEdgeTweaksScripts.zip";
+            await _assetUrls.EnsureLoadedAsync();
+            string downloadUrl = _assetUrls.For("MirrorsEdgeTweaksScripts.zip");
             string tempZipPath = Path.Combine(Path.GetTempPath(), "MirrorsEdgeTweaksScripts.zip");
 
             _gameStatusViewModel.IsGameTweaksEnabled = false;
@@ -4807,9 +4816,10 @@ namespace MirrorsEdgeTweaks
                 return;
 
             bool isMEMM = versionChoice.Value;
-            string downloadUrl = isMEMM
-                ? "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/MirrorsEdgeTweaksScriptsUI_MEMM_compatible.zip"
-                : "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/MirrorsEdgeTweaksScriptsUI.zip";
+            await _assetUrls.EnsureLoadedAsync();
+            string downloadUrl = _assetUrls.For(isMEMM
+                ? "MirrorsEdgeTweaksScriptsUI_MEMM_compatible.zip"
+                : "MirrorsEdgeTweaksScriptsUI.zip");
 
             await InstallTweaksScriptsUIAsync(downloadUrl, isMEMM);
         }
@@ -8478,15 +8488,10 @@ namespace MirrorsEdgeTweaks
             {
                 this.IsEnabled = false;
 
-                string downloadUrl;
-                if (selection == "Disabled")
-                {
-                    downloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/FaithModelOriginal.zip";
-                }
-                else
-                {
-                    downloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/FaithModelCinematic.zip";
-                }
+                await _assetUrls.EnsureLoadedAsync();
+                string downloadUrl = _assetUrls.For(selection == "Disabled"
+                    ? "FaithModelOriginal.zip"
+                    : "FaithModelCinematic.zip");
 
                 await DownloadAndExtractCinematicFaithFiles(downloadUrl);
             }
@@ -8770,7 +8775,8 @@ namespace MirrorsEdgeTweaks
                     }
                 });
 
-                await DownloadAndExtractLanguageFiles(languageConfig.DownloadUrl);
+                await _assetUrls.EnsureLoadedAsync();
+                await DownloadAndExtractLanguageFiles(_assetUrls.For(languageConfig.AssetFileName));
 
                 DialogHelper.ShowMessage("Success", $"Game language has been changed to {language}.", DialogHelper.MessageType.Success);
             }
@@ -8793,7 +8799,7 @@ namespace MirrorsEdgeTweaks
 
         private class LanguageConfig
         {
-            public string DownloadUrl { get; set; } = "";
+            public string AssetFileName { get; set; } = "";
             public string RegistryLanguage { get; set; } = "";
             public string Locale { get; set; } = "";
             public string TdEngineLanguage { get; set; } = "";
@@ -8805,98 +8811,98 @@ namespace MirrorsEdgeTweaks
             {
                 "Čeština (CZE)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/CZE.zip",
+                    AssetFileName = "CZE.zip",
                     RegistryLanguage = "Czech",
                     Locale = "cs",
                     TdEngineLanguage = "cze"
                 },
                 "Deutsch (DEU)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/DEU.zip",
+                    AssetFileName = "DEU.zip",
                     RegistryLanguage = "German",
                     Locale = "de_DE",
                     TdEngineLanguage = "deu"
                 },
                 "English (INT)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/INT.zip",
+                    AssetFileName = "INT.zip",
                     RegistryLanguage = "English",
                     Locale = "en_UK",
                     TdEngineLanguage = "int"
                 },
                 "Español (ESN)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/ESN.zip",
+                    AssetFileName = "ESN.zip",
                     RegistryLanguage = "Spanish",
                     Locale = "es_ES",
                     TdEngineLanguage = "esn"
                 },
                 "Français (FRA)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/FRA.zip",
+                    AssetFileName = "FRA.zip",
                     RegistryLanguage = "French",
                     Locale = "fr_FR",
                     TdEngineLanguage = "fra"
                 },
                 "Italiano (ITA)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/ITA.zip",
+                    AssetFileName = "ITA.zip",
                     RegistryLanguage = "Italian",
                     Locale = "it_IT",
                     TdEngineLanguage = "ita"
                 },
                 "Magyar (HUN)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/HUN.zip",
+                    AssetFileName = "HUN.zip",
                     RegistryLanguage = "Hungarian",
                     Locale = "hu_HU",
                     TdEngineLanguage = "hun"
                 },
                 "Polski (POL)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/POL.zip",
+                    AssetFileName = "POL.zip",
                     RegistryLanguage = "Polish",
                     Locale = "pl_PL",
                     TdEngineLanguage = "pol"
                 },
                 "Português (POR)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/POR.zip",
+                    AssetFileName = "POR.zip",
                     RegistryLanguage = "Portuguese Brazil",
                     Locale = "pt_PT",
                     TdEngineLanguage = "por"
                 },
                 "Русский (RUS)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/RUS.zip",
+                    AssetFileName = "RUS.zip",
                     RegistryLanguage = "Russian",
                     Locale = "ru_RU",
                     TdEngineLanguage = "rus"
                 },
                 "한국어 (KOR)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/KOR.zip",
+                    AssetFileName = "KOR.zip",
                     RegistryLanguage = "Korean",
                     Locale = "ko_KR",
                     TdEngineLanguage = "kor"
                 },
                 "台灣繁體中文 (CHT)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/CHT.zip",
+                    AssetFileName = "CHT.zip",
                     RegistryLanguage = "Traditional Chinese Taiwan",
                     Locale = "zh-TW",
                     TdEngineLanguage = "cht"
                 },
                 "日本語 (JPN)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/JPN.zip",
+                    AssetFileName = "JPN.zip",
                     RegistryLanguage = "Japanese",
                     Locale = "ja_JP",
                     TdEngineLanguage = "jpn"
                 },
                 "简体中文 (CHS)" => new LanguageConfig
                 {
-                    DownloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Language%20Files/CHS.zip",
+                    AssetFileName = "CHS.zip",
                     RegistryLanguage = "Simplified Chinese",
                     Locale = "zh_CN",
                     TdEngineLanguage = "chs"
@@ -9150,24 +9156,24 @@ namespace MirrorsEdgeTweaks
             try
             {
                 int selectedIndex = AudioBackendComboBox.SelectedIndex;
-                string downloadUrl;
+                string assetFileName;
                 int maxChannels;
                 string deviceName;
 
                 switch (selectedIndex)
                 {
                     case 0:
-                        downloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/OpenAL.zip";
+                        assetFileName = "OpenAL.zip";
                         maxChannels = 32;
                         deviceName = "Generic Hardware";
                         break;
                     case 1:
-                        downloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/OpenALSoft.zip";
+                        assetFileName = "OpenALSoft.zip";
                         maxChannels = 256;
                         deviceName = "OpenAL Soft";
                         break;
                     case 2:
-                        downloadUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/OpenALSoftHRTF.zip";
+                        assetFileName = "OpenALSoftHRTF.zip";
                         maxChannels = 256;
                         deviceName = "OpenAL Soft";
                         break;
@@ -9175,7 +9181,8 @@ namespace MirrorsEdgeTweaks
                         return;
                 }
 
-                await DownloadAndExtractAudioBackendFiles(downloadUrl);
+                await _assetUrls.EnsureLoadedAsync();
+                await DownloadAndExtractAudioBackendFiles(_assetUrls.For(assetFileName));
 
                 if (selectedIndex != 2)
                     CleanupHrtfFiles();

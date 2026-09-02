@@ -78,17 +78,22 @@ namespace MirrorsEdgeTweaks.Helpers
             }
         }
 
-        public static string? GetDownloadUrl(string gameVersionInfo, string selectedFix)
+        /// <summary>
+        /// The asset file name for a TdGame variant, or null if the game version or the
+        /// selection isn't one we ship a package for. Callers turn this into a URL through
+        /// <see cref="Services.IAssetUrlProvider"/>, which is what knows where assets live.
+        /// </summary>
+        public static string? GetDownloadFileName(string gameVersionInfo, string selectedFix)
         {
-            string baseUrl;
+            string prefix;
 
             if (gameVersionInfo.Contains("1.0.0.0") || gameVersionInfo.Contains("1.0.1.0"))
             {
-                baseUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/Base_";
+                prefix = "Base_";
             }
             else if (gameVersionInfo.Contains("1.1.0.0"))
             {
-                baseUrl = "https://github.com/softsoundd/MirrorsEdgeTweaks/raw/refs/heads/main/Downloads/DLC_";
+                prefix = "DLC_";
             }
             else
             {
@@ -104,7 +109,7 @@ namespace MirrorsEdgeTweaks.Helpers
                 _ => string.Empty
             };
 
-            return string.IsNullOrEmpty(fileName) ? null : baseUrl + fileName;
+            return string.IsNullOrEmpty(fileName) ? null : prefix + fileName;
         }
     }
 
