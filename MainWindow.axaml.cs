@@ -1533,7 +1533,15 @@ namespace MirrorsEdgeTweaks
 
             if (TdGameVersionComboBox.SelectedItem is ComboBoxItem selectedItem && selectedItem.Content is string selectedVersionName)
             {
-                var result = await DialogHelper.ShowConfirmationAsync("Confirm Download", $"This will download and replace your current 'TdGame.u' file.\n\nThis action cannot be undone. Do you want to continue?");
+                var result = await DialogHelper.ShowConfirmationAsync(
+                    "Confirm Download",
+                    $"This will download '{selectedVersionName}' and overwrite your current " +
+                    "'TdGame.u' file.\n\n" +
+                    "You can switch between versions again at any time, but this particular file " +
+                    "can't be brought back: tweaks applied through this app (FOV, sensitivity, " +
+                    "keybinds) are restored automatically where possible, while any third-party " +
+                    "mods stored inside TdGame.u will be lost.\n\n" +
+                    "Do you want to continue?");
 
                 if (result)
                 {
@@ -1548,6 +1556,30 @@ namespace MirrorsEdgeTweaks
 
                     await DownloadAndExtractTdGameAsync(selectedVersionName, touchpointSnapshot);
                 }
+                else
+                {
+                    RevertTdGameSelection(e);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Puts the dropdown back on the version that is actually installed after the user
+        /// declines the download. Nothing was written to disk, so leaving the box showing the
+        /// declined version would misreport what the game has until the next package reload
+        /// happens to correct it.
+        /// </summary>
+        private void RevertTdGameSelection(SelectionChangedEventArgs e)
+        {
+            _tdGameVersionViewModel.IsUpdatingComboBoxProgrammatically = true;
+            try
+            {
+                TdGameVersionComboBox.SelectedItem =
+                    e.RemovedItems.Count > 0 ? e.RemovedItems[0] : null;
+            }
+            finally
+            {
+                _tdGameVersionViewModel.IsUpdatingComboBoxProgrammatically = false;
             }
         }
 
