@@ -28,7 +28,7 @@ is carried over from upstream unchanged.
 dotnet publish -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true
 ```
 
-Requires the .NET 8 SDK. The output is a single self-contained binary; no
+Requires the .NET 10 SDK. The output is a single self-contained binary; no
 runtime needs to be installed (works on immutable distros like Bazzite).
 
 ## Notes
