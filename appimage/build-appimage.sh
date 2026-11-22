@@ -2,7 +2,7 @@
 # Builds the Mirror's Edge Tweaks AppImage. Output goes to ./dist by default, or the
 # directory given as the first argument.
 #
-# Requires: .NET 8 SDK (dotnet on PATH), curl, and the `file` binary (appimagetool
+# Requires: .NET 10 SDK (dotnet on PATH), curl, and the `file` binary (appimagetool
 # shells out to it and fails with a confusing error when it is missing).
 set -euo pipefail
 
