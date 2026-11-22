@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<RootNamespace>MirrorsEdgeTweaks</RootNamespace>
@@ -13,8 +13,8 @@
 		<!-- Version tracks upstream; the fourth part is this port's own revision. -->
 		<Version>4.4.2</Version>
 		<AssemblyVersion>4.4.2.0</AssemblyVersion>
-		<FileVersion>4.4.2.1</FileVersion>
-		<InformationalVersion>4.4.2.1-linux</InformationalVersion>
+		<FileVersion>4.4.2.2</FileVersion>
+		<InformationalVersion>4.4.2.2-linux</InformationalVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
